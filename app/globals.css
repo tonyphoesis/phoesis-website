@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Space Age';
+  src: url('/fonts/space-age.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --light-blue: #16E3FF;
+  --regular-blue: #0A82BF;
+  --dark-blue: #063F73;
+  --bg-dark: #1D1D1D;
+}
+
+body {
+  background: #000000;
+  color: #FFFFFF;
+}
+
+.font-space-age {
+  font-family: 'Space Age', sans-serif;
+}
+
+.text-glow-cyan {
+  text-shadow: 0 0 20px rgba(22, 227, 255, 0.5);
+}
+
+.card-glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--light-blue), var(--regular-blue));
+  box-shadow: 0 0 20px rgba(22, 227, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 30px rgba(22, 227, 255, 0.5);
+}

@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       );
     }
     
-    const { error: dbError } = await supabase.from('contacts').insert({
+    const { error: dbError } = await supabase.from('website_contacts').insert({
       name,
       email,
       company: company || null,
