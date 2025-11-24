@@ -32,7 +32,7 @@ export default function Hero() {
     },
     {
       id: 'platform',
-      title: 'Our Core Platform Enables',
+      title: 'Our Core Platform',
       content: 'Enterprise-grade technology stack including Supabase, Claude AI, OpenAI, Google Cloud, Perplexity, Vercel, GitHub, PostgreSQL, and Vite.',
       link: '/platform',
     },
