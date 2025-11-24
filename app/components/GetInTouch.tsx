@@ -426,10 +426,9 @@ export default function GetInTouch() {
 
           {/* --- Traditional Form Section --- */}
           <div className="card-glass rounded-2xl p-8">
-            <p className="text-white/60 text-sm mb-6 text-center">
-              Or if you prefer doing all the work yourself, type in this form
-            </p>
-            
+            <p className="text-white text-base mb-6 text-center">
+  Or if you prefer doing all the work yourself, type in this form
+</p>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <input

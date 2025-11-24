@@ -31,8 +31,7 @@ export default function Platform() {
             </div>
           </div>
           <p className="text-center text-white/80 max-w-3xl mx-auto">
-            This website was built using Concretus in 3 days, demonstrating the platform's capability to deliver 
-            production-ready applications at unprecedented speed.
+            Our proprietary platform for software development.
           </p>
         </div>
 
@@ -84,6 +83,7 @@ export default function Platform() {
           </div>
         </div>
 
+        {/* Temporarily hidden
         <div className="card-glass rounded-2xl p-8">
           <h2 className="font-space-age text-3xl mb-6 text-[#16E3FF]">Platform Features</h2>
           <div className="grid md:grid-cols-2 gap-6">
@@ -105,6 +105,7 @@ export default function Platform() {
             </div>
           </div>
         </div>
+        */}
       </section>
 
       <GetInTouch />

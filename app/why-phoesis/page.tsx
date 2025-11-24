@@ -50,38 +50,9 @@ export default function WhyPhoesis() {
           </div>
         </div>
 
-        <div className="card-glass rounded-2xl p-8 mb-16">
-          <h2 className="font-space-age text-3xl mb-6 text-center text-[#16E3FF]">
-            The Phoesis Alternative
-          </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="text-5xl font-space-age text-[#16E3FF] mb-2">324x</div>
-              <p className="text-white/80">Faster Development</p>
-            </div>
-            <div className="text-center">
-              <div className="text-5xl font-space-age text-[#16E3FF] mb-2">$0</div>
-              <p className="text-white/80">Platform Fees</p>
-            </div>
-            <div className="text-center">
-              <div className="text-5xl font-space-age text-[#16E3FF] mb-2">100%</div>
-              <p className="text-white/80">You Own It</p>
-            </div>
-          </div>
-        </div>
+        
 
-        <div className="card-glass rounded-2xl p-8">
-          <h3 className="font-space-age text-2xl mb-4 text-[#16E3FF]">Real Results</h3>
-          <p className="text-lg text-white/80 mb-4">
-            <strong>H-2B Visa Management System Case Study:</strong>
-          </p>
-          <ul className="space-y-2 text-white/80">
-            <li>• Traditional estimate: 6 months, $250K+</li>
-            <li>• Phoesis delivery: 1 hour prototype, 2 weeks production</li>
-            <li>• Processes 220,000 rows in 15 minutes vs 6 hours with competitors</li>
-            <li>• Built to exact specifications, fully customizable</li>
-          </ul>
-        </div>
+        
       </section>
 
       <GetInTouch />

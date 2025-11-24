@@ -43,7 +43,7 @@ export default function PhoesisDifference() {
           <div className="card-glass rounded-2xl p-8">
             <h2 className="font-space-age text-2xl mb-4 text-[#16E3FF]">Economics</h2>
             <p className="text-white/80">
-              TEV Factory model. Build vertical-specific applications rapidly, scale to millions in ARR, exit while retaining licensing fees.
+              Technology is one of your largest expenses and it's holding you back.  Make it your enabler!
             </p>
           </div>
         </div>
@@ -79,7 +79,7 @@ export default function PhoesisDifference() {
             <div>
               <h3 className="text-[#16E3FF] font-semibold mb-2">AI Orchestration</h3>
               <ul className="space-y-1 text-white/70 text-sm">
-                <li>• Multi-Model Engine (Claude, GPT-4, Gemini)</li>
+                <li>• Multi-Model Engine (Claude, GPT-4, Gemini, Perplexity and more)</li>
                 <li>• Intelligent routing - best model per task</li>
                 <li>• Enterprise tier agreements</li>
               </ul>

@@ -14,7 +14,8 @@ export default function Hero() {
     {
       id: 'welcome',
       hasVideo: true,
-      title: 'Build in Weeks, Not Quarters',
+      titleLine1: 'Build in Weeks',
+      titleLine2: 'Not Quarters',
       subtitle: 'Our AI-native platform that delivers software like Roman concrete — strengthening over time instead of accumulating technical debt.',
     },
     {
@@ -37,9 +38,9 @@ export default function Hero() {
     },
     {
       id: 'dogfood',
-      title: 'We Eat Our Own Dog Food',
+      titleLine1: 'We eat our',
+      titleLine2: 'own cooking',
       content: 'Tired of technology vendors telling you how to use technology when they do not do it themselves? We make the best software fast, affordable, and rugged. Why would we use other peoples software when we can build better in days?',
-      subtitle: 'This website was built with Concretus in an hour.',
       link: '/platform',
     },
     {
@@ -56,7 +57,7 @@ export default function Hero() {
     },
   ];
 
-  // Auto-rotate every 20 seconds (much slower)
+  // Auto-rotate every 20 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
@@ -142,9 +143,18 @@ export default function Hero() {
               {/* Text overlay - centered vertically */}
               <div className="relative z-10 h-full flex items-center justify-center px-6">
                 <div className="max-w-4xl text-center">
-                  <h1 className="font-space-age text-4xl md:text-5xl lg:text-6xl mb-6 text-glow-cyan text-[#16E3FF]">
-                    {slide.title}
-                  </h1>
+                  {/* Multi-line titles */}
+                  {slide.titleLine1 && slide.titleLine2 ? (
+                    <h1 className="font-space-age text-4xl md:text-5xl lg:text-6xl mb-6 text-glow-cyan text-[#16E3FF]">
+                      {slide.titleLine1}
+                      <br />
+                      {slide.titleLine2}
+                    </h1>
+                  ) : (
+                    <h1 className="font-space-age text-4xl md:text-5xl lg:text-6xl mb-6 text-glow-cyan text-[#16E3FF]">
+                      {slide.title}
+                    </h1>
+                  )}
                   
                   {slide.subtitle && (
                     <p className="text-lg md:text-xl lg:text-2xl mb-8 text-white/90">

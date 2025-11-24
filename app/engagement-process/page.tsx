@@ -28,37 +28,37 @@ export default function EngagementProcess() {
           {[
             {
               phase: '1. Discovery',
-              duration: '1 Week',
+              duration: '',
               description: 'Deep dive into your organization, processes, and pain points. We identify quick wins and long-term opportunities.',
               deliverables: ['Comprehensive requirements document', 'Technology stack recommendations', 'Timeline and budget proposal']
             },
             {
               phase: '2. Architecture',
-              duration: '1 Week',
+              duration: '',
               description: 'Design the complete system architecture with database schemas, API structures, and integration points.',
               deliverables: ['Database schema design', 'API documentation', 'Security and compliance plan']
             },
             {
               phase: '3. Build',
-              duration: '4-6 Weeks',
+              duration: '',
               description: 'Rapid development using Concretus platform. Weekly demos and continuous feedback integration.',
               deliverables: ['Working application', 'Automated testing', 'Performance optimization']
             },
             {
               phase: '4. Validate',
-              duration: '2 Weeks',
+              duration: '',
               description: 'Real-world testing with actual users and data. Refinement based on feedback.',
               deliverables: ['User acceptance testing', 'Bug fixes and improvements', 'Documentation']
             },
             {
               phase: '5. Deploy',
-              duration: '1 Week',
+              duration: '',
               description: 'Production deployment with monitoring, backup systems, and security hardening.',
               deliverables: ['Live production system', 'Monitoring dashboards', 'Deployment documentation']
             },
             {
               phase: '6. Scale',
-              duration: 'Ongoing',
+              duration: '',
               description: 'Continuous improvement, feature additions, and performance optimization as your needs evolve.',
               deliverables: ['Regular updates', 'New feature development', '24/7 support']
             }
@@ -84,7 +84,7 @@ export default function EngagementProcess() {
         <div className="card-glass rounded-2xl p-8 text-center">
           <h2 className="font-space-age text-3xl mb-4 text-[#16E3FF]">Ready to Get Started?</h2>
           <p className="text-white/80 mb-6">
-            Typical timeline: 10-12 weeks from kickoff to production. Start bringing your organization's true capabilities to life.
+            Start bringing your organization's true capabilities to life.
           </p>
           <a href="/contact-us" className="btn-primary inline-block px-8 py-4 rounded-full">
             Schedule Discovery Call →

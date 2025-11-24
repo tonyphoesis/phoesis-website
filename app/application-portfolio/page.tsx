@@ -24,6 +24,7 @@ export default function ApplicationPortfolio() {
       </section>
 
       <section className="max-w-5xl mx-auto px-6 py-16 space-y-12">
+        {/*}
         <div className="card-glass rounded-2xl p-8">
           <h2 className="font-space-age text-3xl mb-6 text-[#16E3FF]">Featured: H-2B Visa Management System</h2>
           <div className="grid md:grid-cols-2 gap-8">
@@ -51,6 +52,7 @@ export default function ApplicationPortfolio() {
             </div>
           </div>
         </div>
+        */}
 
         <div className="grid md:grid-cols-2 gap-8">
           <div className="card-glass rounded-2xl p-8">

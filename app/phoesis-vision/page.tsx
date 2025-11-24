@@ -43,15 +43,7 @@ export default function PhoesisVision() {
           </p>
         </div>
 
-        <div className="card-glass rounded-2xl p-8">
-          <h2 className="font-space-age text-3xl mb-6 text-[#16E3FF]">Long-Term Goals</h2>
-          <ul className="space-y-4 text-lg text-white/80">
-            <li>• Target acquisition by major technology companies by April 2026</li>
-            <li>• Comprehensive IP protection through trademark and patent portfolio</li>
-            <li>• Scale the TEV Factory model across multiple verticals</li>
-            <li>• Eventually provide tools to organizations serving the public good</li>
-          </ul>
-        </div>
+        
       </section>
 
       <GetInTouch />

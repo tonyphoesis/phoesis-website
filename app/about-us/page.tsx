@@ -40,17 +40,16 @@ export default function AboutUs() {
               <p className="text-[#16E3FF] font-semibold mb-2">Our Founder</p>
               <h2 className="font-space-age text-4xl mb-4">Tony Elliot</h2>
               <p className="text-white/80 leading-relaxed mb-4">
-                Tony combines 12+ years in transportation management systems at companies like Trimble and Love's Travel Stops 
-                with philosophy education, bringing unique pattern recognition and systems thinking to software architecture.
+                Tony combines 25+ years in logistics and technology with philosophy education, bringing unique pattern recognition and systems thinking to software architecture.
               </p>
               <p className="text-white/80 leading-relaxed">
-                He built the entire Concretus platform in 7 days with no traditional coding background, demonstrating the power 
-                of AI-assisted development when guided by deep systems understanding and organizational principles.
+                After spending those years in a variety of roles, experiencing the pain of both technology customers and vendors.  He started Phoesis to change how the world does technology. 
               </p>
             </div>
           </div>
         </div>
 
+        {/*
         <div className="card-glass rounded-2xl p-8">
           <h2 className="font-space-age text-3xl mb-6 text-center text-[#16E3FF]">Our Global Team</h2>
           <p className="text-center text-white/80 mb-8 max-w-3xl mx-auto">
@@ -75,19 +74,20 @@ export default function AboutUs() {
             </div>
           </div>
         </div>
+        */}
 
         <div className="grid md:grid-cols-3 gap-8">
           <div className="card-glass rounded-2xl p-8 text-center">
             <h3 className="font-space-age text-2xl mb-4 text-[#16E3FF]">Phoesis</h3>
-            <p className="text-white/80">Nature - The natural emergence of order from chaos</p>
+            <p className="text-white/80">Illuminated Understanding - earned through years of experience</p>
           </div>
           <div className="card-glass rounded-2xl p-8 text-center">
             <h3 className="font-space-age text-2xl mb-4 text-[#16E3FF]">Concretus</h3>
-            <p className="text-white/80">Concrete - Software that strengthens over time</p>
+            <p className="text-white/80">Latin for Concrete - Software that self-heals & strengthens over time</p>
           </div>
           <div className="card-glass rounded-2xl p-8 text-center">
             <h3 className="font-space-age text-2xl mb-4 text-[#16E3FF]">Perpetuum</h3>
-            <p className="text-white/80">Forever - Systems built to last generations</p>
+            <p className="text-white/80">Eternal - Systems built to perpetually improve themselves</p>
           </div>
         </div>
       </section>

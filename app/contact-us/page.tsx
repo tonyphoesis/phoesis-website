@@ -27,13 +27,10 @@ export default function ContactUs() {
         <div className="card-glass rounded-2xl p-8 mb-12">
           <div className="grid md:grid-cols-2 gap-8 text-center md:text-left">
             <div>
-              <h3 className="text-xl font-semibold mb-2 text-[#16E3FF]">Phoenix Office</h3>
-              <p className="text-white/70">Phoenix, Arizona</p>
+              <h3 className="text-xl font-semibold mb-2 text-[#16E3FF]">Arizona Based</h3>
+              <p className="text-white/70">Our primary location is Buckeye, Arizona.</p>
             </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-2 text-[#16E3FF]">Texas Office</h3>
-              <p className="text-white/70">Pattonville, Texas</p>
-            </div>
+            
           </div>
         </div>
 
