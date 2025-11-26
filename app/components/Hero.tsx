@@ -16,7 +16,7 @@ export default function Hero() {
       hasVideo: true,
       titleLine1: 'Build in Weeks',
       titleLine2: 'Not Quarters',
-      subtitle: 'Our AI-native platform that delivers software like Roman concrete — strengthening over time instead of accumulating technical debt.',
+      subtitle: 'Our AI-native platform builds software with the durability of Roman concrete.',
     },
     {
       id: 'problem',
