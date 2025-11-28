@@ -29,7 +29,7 @@ export default function Footer() {
         {/* Logo */}
         <div className="flex flex-col items-center mb-6">
           <Image
-            src="/images/logos/Combo - Horizontal - White Phoesis (Blue Stars) - No BG - 700x200.png"
+            src="/images/logos/phoesis-logo-horizontal-white.png"
             alt="Phoesis"
             width={200}
             height={57}

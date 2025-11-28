@@ -24,7 +24,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/">
           <Image
-            src="/images/logos/Combo - Horizontal - White Phoesis (Blue Stars) - No BG - 700x200.png"
+            src="/images/logos/phoesis-logo-horizontal-white.png"
             alt="Phoesis"
             width={200}
             height={57}
