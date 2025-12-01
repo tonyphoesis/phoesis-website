@@ -531,7 +531,7 @@ export default function GetInTouch() {
               Book Time
             </h3>
             <p className="text-white/80 max-w-2xl mx-auto">
-              Schedule a meeting with us. We'll send you a Google Meet link.
+              Schedule a 30 minute meeting with us. We'll send you a Google Meet link.
             </p>
           </div>
 

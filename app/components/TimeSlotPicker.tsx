@@ -30,11 +30,42 @@ export default function TimeSlotPicker({
   timezone,
   onTimezoneChange,
 }: TimeSlotPickerProps) {
-  // Generate time slots (7:00 AM to 7:30 PM)
+  // Tony's availability is 7:00 AM - 7:30 PM Phoenix time (UTC-7, no DST)
+  const PHOENIX_OFFSET = -7;
+
+  // Standard timezone offsets (winter/standard time)
+  // Note: DST handling would require more complex logic
+  const timezoneOffsets: Record<string, number> = {
+    'America/Phoenix': -7,      // MST (no DST)
+    'America/Los_Angeles': -8,  // PST
+    'America/Denver': -7,       // MST
+    'America/Chicago': -6,      // CST
+    'America/New_York': -5,     // EST
+    'America/Anchorage': -9,    // AKST
+    'Pacific/Honolulu': -10,    // HST
+    'Europe/London': 0,         // GMT
+    'Europe/Paris': 1,          // CET
+    'Asia/Tokyo': 9,            // JST
+    'Australia/Sydney': 11,     // AEDT
+  };
+
+  // Calculate hour shift based on timezone difference from Phoenix
+  const selectedOffset = timezoneOffsets[timezone] ?? -7;
+  const hourShift = selectedOffset - PHOENIX_OFFSET;
+
+  // Generate time slots shifted to user's timezone
   const generateTimeSlots = () => {
     const slots = [];
-    for (let hour = 7; hour <= 19; hour++) {
-      const hourStr = hour.toString().padStart(2, '0');
+    const phoenixStartHour = 7;  // 7:00 AM Phoenix
+    const phoenixEndHour = 19;   // 7:00 PM Phoenix (last slot 7:30 PM)
+
+    const startHour = phoenixStartHour + hourShift;
+    const endHour = phoenixEndHour + hourShift;
+
+    for (let hour = startHour; hour <= endHour; hour++) {
+      // Handle hour wraparound for extreme timezones
+      const displayHour = ((hour % 24) + 24) % 24;
+      const hourStr = displayHour.toString().padStart(2, '0');
       slots.push(`${hourStr}:00`);
       slots.push(`${hourStr}:30`);
     }
@@ -95,17 +126,24 @@ export default function TimeSlotPicker({
   // Group slots by hour pairs (e.g., [7:00, 7:30], [8:00, 8:30])
   const groupSlotsByHour = (slots: string[]) => {
     const groups: { hour: number; slots: string[] }[] = [];
+    const hourMap = new Map<number, string[]>();
 
-    for (let hour = 7; hour <= 19; hour++) {
-      const hourSlots = slots.filter(slot => {
-        const slotHour = parseInt(slot.split(':')[0]);
-        return slotHour === hour;
-      });
-
-      if (hourSlots.length > 0) {
-        groups.push({ hour, slots: hourSlots });
+    // Group slots by their hour
+    slots.forEach(slot => {
+      const hour = parseInt(slot.split(':')[0]);
+      if (!hourMap.has(hour)) {
+        hourMap.set(hour, []);
       }
-    }
+      hourMap.get(hour)!.push(slot);
+    });
+
+    // Sort by hour and create groups
+    const sortedHours = Array.from(hourMap.keys()).sort((a, b) => a - b);
+    sortedHours.forEach(hour => {
+      const hourSlots = hourMap.get(hour)!;
+      hourSlots.sort((a, b) => a.localeCompare(b));
+      groups.push({ hour, slots: hourSlots });
+    });
 
     return groups;
   };
