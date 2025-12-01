@@ -6,11 +6,6 @@ import { createClient } from '@supabase/supabase-js';
 // INITIALIZATION
 // ================================================
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
@@ -40,6 +35,14 @@ export async function GET(req: NextRequest) {
     if (!date) {
       console.error('[API] ERROR: Date parameter missing');
       return NextResponse.json({ error: 'Date required' }, { status: 400 });
+    }
+
+    // Check for Google credentials - return mock data for local dev
+    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_REFRESH_TOKEN) {
+      console.log('[API] No Google credentials - returning mock data for local dev');
+      return NextResponse.json({
+        busySlots: ['13:00', '13:30', '16:00']
+      });
     }
 
     // Build date strings in the user's timezone
@@ -143,13 +146,21 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const { name, email, phone, date, time, timezone, message } = await req.json();
-    
+
     if (!name || !email || !date || !time) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       );
     }
+
+    // Initialize Supabase client (only in POST handler)
+    const supabase = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
+      ? createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL,
+          process.env.SUPABASE_SERVICE_ROLE_KEY
+        )
+      : null;
 
     // Parse datetime with timezone awareness
     const dateTimeStr = `${date}T${time}:00`;
@@ -201,17 +212,22 @@ export async function POST(req: NextRequest) {
 
     console.log('Booking created:', response.data.id);
 
-    // Save to Supabase
-    await supabase.from('appointments').insert({
-      name,
-      email,
-      phone,
-      scheduled_time: dateTimeStr,
-      message,
-      google_event_id: response.data.id,
-      meet_link: response.data.hangoutLink,
-      status: 'confirmed',
-    });
+    // Save to Supabase (if configured)
+    if (supabase) {
+      await supabase.from('appointments').insert({
+        name,
+        email,
+        phone,
+        scheduled_time: dateTimeStr,
+        message,
+        google_event_id: response.data.id,
+        meet_link: response.data.hangoutLink,
+        status: 'confirmed',
+      });
+      console.log('Booking saved to Supabase');
+    } else {
+      console.log('Supabase not configured - skipping database save');
+    }
 
     return NextResponse.json({
       success: true,
