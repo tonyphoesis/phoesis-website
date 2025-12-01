@@ -32,8 +32,13 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const date = searchParams.get('date');
     const timezone = searchParams.get('timezone') || 'America/Phoenix';
-    
+
+    console.log('[API] ===== GET /api/booking =====');
+    console.log('[API] Received params:', { date, timezone });
+    console.log('[API] Full URL:', req.url);
+
     if (!date) {
+      console.error('[API] ERROR: Date parameter missing');
       return NextResponse.json({ error: 'Date required' }, { status: 400 });
     }
 
@@ -41,7 +46,7 @@ export async function GET(req: NextRequest) {
     const startOfDay = `${date}T00:00:00-07:00`;
     const endOfDay = `${date}T23:59:59-07:00`;
 
-    console.log('Fetching calendar for:', { date, timezone, start: startOfDay, end: endOfDay });
+    console.log('[API] Date range for Google Calendar:', { date, timezone, start: startOfDay, end: endOfDay });
 
     const response = await calendar.events.list({
       calendarId: 'primary',
@@ -52,7 +57,20 @@ export async function GET(req: NextRequest) {
       timeZone: timezone,
     });
 
-    console.log('Calendar events found:', response.data.items?.length || 0);
+    console.log('[API] Google Calendar API response received');
+    console.log('[API] Calendar events found:', response.data.items?.length || 0);
+
+    if (response.data.items && response.data.items.length > 0) {
+      console.log('[API] Event details:');
+      response.data.items.forEach((event, idx) => {
+        console.log(`[API]   Event ${idx + 1}:`, {
+          summary: event.summary,
+          start: event.start?.dateTime,
+          end: event.end?.dateTime,
+          isAllDay: !event.start?.dateTime
+        });
+      });
+    }
 
     // Extract busy time slots
     const busySlots: string[] = [];
@@ -102,12 +120,18 @@ export async function GET(req: NextRequest) {
 
     // Remove duplicates
     const uniqueBusySlots = [...new Set(busySlots)];
-    
-    console.log('Final busy slots:', uniqueBusySlots);
+
+    console.log('[API] Busy slots before deduplication:', busySlots);
+    console.log('[API] Final unique busy slots:', uniqueBusySlots);
+    console.log('[API] Returning response:', { busySlots: uniqueBusySlots });
 
     return NextResponse.json({ busySlots: uniqueBusySlots });
   } catch (error) {
-    console.error('Calendar fetch error:', error);
+    console.error('[API] ===== ERROR IN GET /api/booking =====');
+    console.error('[API] Error type:', error instanceof Error ? error.constructor.name : typeof error);
+    console.error('[API] Error message:', error instanceof Error ? error.message : String(error));
+    console.error('[API] Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+    console.error('[API] Full error object:', error);
     return NextResponse.json({ error: 'Failed to fetch calendar' }, { status: 500 });
   }
 }

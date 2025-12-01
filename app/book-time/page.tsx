@@ -45,17 +45,29 @@ export default function BookTimePage() {
 
     const fetchBusySlots = async () => {
       setIsLoadingSlots(true);
+      console.log('[BOOKING] Fetching busy slots for:', {
+        date: bookingData.date,
+        timezone: bookingData.timezone,
+        url: `/api/booking?date=${bookingData.date}&timezone=${bookingData.timezone}`
+      });
+
       try {
         const response = await fetch(
           `/api/booking?date=${bookingData.date}&timezone=${bookingData.timezone}`
         );
 
+        console.log('[BOOKING] API response status:', response.status);
+
         if (response.ok) {
           const data = await response.json();
+          console.log('[BOOKING] API response data:', data);
+          console.log('[BOOKING] Setting busySlots to:', data.busySlots || []);
           setBusySlots(data.busySlots || []);
+        } else {
+          console.error('[BOOKING] API response not OK:', response.status, response.statusText);
         }
       } catch (error) {
-        console.error('Failed to fetch busy slots:', error);
+        console.error('[BOOKING] Failed to fetch busy slots:', error);
       } finally {
         setIsLoadingSlots(false);
       }

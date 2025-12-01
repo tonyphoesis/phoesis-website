@@ -134,17 +134,29 @@ export default function GetInTouch() {
 
     const fetchBusySlots = async () => {
       setIsLoadingSlots(true);
+      console.log('[BOOKING] GetInTouch - Fetching busy slots for:', {
+        date: bookingData.date,
+        timezone: bookingData.timezone,
+        url: `/api/booking?date=${bookingData.date}&timezone=${bookingData.timezone}`
+      });
+
       try {
         const response = await fetch(
           `/api/booking?date=${bookingData.date}&timezone=${bookingData.timezone}`
         );
-        
+
+        console.log('[BOOKING] GetInTouch - API response status:', response.status);
+
         if (response.ok) {
           const data = await response.json();
+          console.log('[BOOKING] GetInTouch - API response data:', data);
+          console.log('[BOOKING] GetInTouch - Setting busySlots to:', data.busySlots || []);
           setBusySlots(data.busySlots || []);
+        } else {
+          console.error('[BOOKING] GetInTouch - API response not OK:', response.status, response.statusText);
         }
       } catch (error) {
-        console.error('Failed to fetch busy slots:', error);
+        console.error('[BOOKING] GetInTouch - Failed to fetch busy slots:', error);
       } finally {
         setIsLoadingSlots(false);
       }

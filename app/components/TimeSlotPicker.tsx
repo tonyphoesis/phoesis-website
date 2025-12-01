@@ -39,8 +39,24 @@ export default function TimeSlotPicker({
 
   const allTimeSlots = generateTimeSlots();
 
+  // DEBUG: Log availability data
+  console.log('[BOOKING] TimeSlotPicker Debug:', {
+    selectedDate,
+    selectedTime,
+    busySlotsReceived: busySlots,
+    busySlotsLength: busySlots.length,
+    isLoading,
+    allTimeSlotsCount: allTimeSlots.length
+  });
+
   // Filter out busy slots - only show available times
   const availableSlots = allTimeSlots.filter(slot => !busySlots.includes(slot));
+
+  console.log('[BOOKING] After filtering:', {
+    availableSlotsCount: availableSlots.length,
+    availableSlots: availableSlots,
+    filteredOutCount: allTimeSlots.length - availableSlots.length
+  });
 
   // Convert 24-hour time to 12-hour format
   const formatTime = (time: string) => {
