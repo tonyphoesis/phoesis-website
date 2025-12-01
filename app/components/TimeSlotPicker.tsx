@@ -1,11 +1,12 @@
 /**
  * TimeSlotPicker Component
- * Version: 1.0
- * Created: 2025-12-01
+ * Version: 1.1
+ * Modified: 2025-12-01 00:15:00 UTC
  * Modified By: Claude Code
- *
- * Time slot selection component with AM/PM columns
- * Shows available time slots as clickable buttons
+ * Changes:
+ * - Fixed availability check to properly filter busy slots
+ * - Hide unavailable slots completely (don't show them)
+ * - Improved button layout: group by hour pairs with consistent width
  */
 
 'use client';
@@ -36,7 +37,10 @@ export default function TimeSlotPicker({
     return slots;
   };
 
-  const timeSlots = generateTimeSlots();
+  const allTimeSlots = generateTimeSlots();
+
+  // Filter out busy slots - only show available times
+  const availableSlots = allTimeSlots.filter(slot => !busySlots.includes(slot));
 
   // Convert 24-hour time to 12-hour format
   const formatTime = (time: string) => {
@@ -68,47 +72,67 @@ export default function TimeSlotPicker({
     return `${getDayName(dateString)}, ${months[date.getMonth()]} ${date.getDate()}`;
   };
 
-  // Split slots into AM and PM
-  const amSlots = timeSlots.filter(slot => {
+  // Group slots by hour pairs (e.g., [7:00, 7:30], [8:00, 8:30])
+  const groupSlotsByHour = (slots: string[]) => {
+    const groups: { hour: number; slots: string[] }[] = [];
+
+    for (let hour = 7; hour <= 19; hour++) {
+      const hourSlots = slots.filter(slot => {
+        const slotHour = parseInt(slot.split(':')[0]);
+        return slotHour === hour;
+      });
+
+      if (hourSlots.length > 0) {
+        groups.push({ hour, slots: hourSlots });
+      }
+    }
+
+    return groups;
+  };
+
+  // Split available slots into AM and PM
+  const amSlots = availableSlots.filter(slot => {
     const hour = parseInt(slot.split(':')[0]);
     return hour < 12;
   });
 
-  const pmSlots = timeSlots.filter(slot => {
+  const pmSlots = availableSlots.filter(slot => {
     const hour = parseInt(slot.split(':')[0]);
     return hour >= 12;
   });
 
-  // Check if a slot is available
-  const isSlotAvailable = (slot: string) => {
-    return !busySlots.includes(slot);
-  };
+  const amGroups = groupSlotsByHour(amSlots);
+  const pmGroups = groupSlotsByHour(pmSlots);
 
   const renderTimeSlotButton = (slot: string) => {
     const formatted = formatTime(slot);
-    const isAvailable = isSlotAvailable(slot);
     const isSelected = selectedTime === slot;
 
     return (
       <button
         key={slot}
         type="button"
-        onClick={() => isAvailable && onTimeSelect(slot)}
-        disabled={!isAvailable || isLoading}
+        onClick={() => onTimeSelect(slot)}
+        disabled={isLoading}
         className={`
-          px-4 py-2.5 rounded-lg text-sm font-medium
+          w-28 px-4 py-2.5 rounded-lg text-sm font-medium
           transition-all duration-200
           ${isSelected
             ? 'bg-[#16E3FF] text-slate-900 font-bold'
-            : isAvailable
-            ? 'bg-white/5 border border-white/20 text-white hover:bg-white/10 hover:border-[#16E3FF]'
-            : 'bg-white/5 border border-white/10 text-white/30 cursor-not-allowed line-through'
+            : 'bg-white/5 border border-white/20 text-white hover:bg-white/10 hover:border-[#16E3FF]'
           }
-          ${!isAvailable && !isSelected ? 'opacity-40' : ''}
         `}
       >
         {formatted.display}
       </button>
+    );
+  };
+
+  const renderHourGroup = (group: { hour: number; slots: string[] }) => {
+    return (
+      <div key={group.hour} className="flex gap-2 justify-center">
+        {group.slots.map(slot => renderTimeSlotButton(slot))}
+      </div>
     );
   };
 
@@ -144,31 +168,48 @@ export default function TimeSlotPicker({
 
       {/* Time Slots */}
       {!isLoading && selectedDate && (
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* AM Column */}
-          <div>
-            <h4 className="text-[#16E3FF] font-semibold text-sm mb-3 text-center">
-              Morning (AM)
-            </h4>
-            <div className="space-y-2">
-              {amSlots.map(slot => renderTimeSlotButton(slot))}
+        <>
+          {availableSlots.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-white/60 text-lg mb-2">
+                No available times on this date
+              </p>
+              <p className="text-white/40 text-sm">
+                Please select a different date
+              </p>
             </div>
-          </div>
+          ) : (
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* AM Column */}
+              {amSlots.length > 0 && (
+                <div>
+                  <h4 className="text-[#16E3FF] font-semibold text-sm mb-4 text-center">
+                    Morning (AM)
+                  </h4>
+                  <div className="space-y-3">
+                    {amGroups.map(group => renderHourGroup(group))}
+                  </div>
+                </div>
+              )}
 
-          {/* PM Column */}
-          <div>
-            <h4 className="text-[#16E3FF] font-semibold text-sm mb-3 text-center">
-              Afternoon/Evening (PM)
-            </h4>
-            <div className="space-y-2">
-              {pmSlots.map(slot => renderTimeSlotButton(slot))}
+              {/* PM Column */}
+              {pmSlots.length > 0 && (
+                <div>
+                  <h4 className="text-[#16E3FF] font-semibold text-sm mb-4 text-center">
+                    Afternoon/Evening (PM)
+                  </h4>
+                  <div className="space-y-3">
+                    {pmGroups.map(group => renderHourGroup(group))}
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        </div>
+          )}
+        </>
       )}
 
-      {/* Legend */}
-      {!isLoading && selectedDate && (
+      {/* Legend - Only show when there are available slots */}
+      {!isLoading && selectedDate && availableSlots.length > 0 && (
         <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-center gap-4 text-xs text-white/60">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-white/5 border border-white/20 rounded"></div>
@@ -177,10 +218,6 @@ export default function TimeSlotPicker({
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-[#16E3FF] rounded"></div>
             <span>Selected</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-white/5 border border-white/10 rounded opacity-40"></div>
-            <span>Unavailable</span>
           </div>
         </div>
       )}
