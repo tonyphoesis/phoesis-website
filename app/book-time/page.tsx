@@ -1,14 +1,24 @@
+/**
+ * Book Time Page
+ * Version: 2.0
+ * Modified: 2025-12-01 00:00:00 UTC
+ * Modified By: Claude Code
+ * Changes: Redesigned with visual calendar picker (Calendly-style layout)
+ */
+
 'use client';
 
 import { useState, useEffect } from 'react';
 import { Calendar } from 'lucide-react';
 import Image from 'next/image';
+import CalendarPicker from '../components/CalendarPicker';
+import TimeSlotPicker from '../components/TimeSlotPicker';
 
 export default function BookTimePage() {
   // ================================================
   // STATE MANAGEMENT
   // ================================================
-  
+
   const [bookingData, setBookingData] = useState({
     name: '',
     email: '',
@@ -24,20 +34,9 @@ export default function BookTimePage() {
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
 
   // ================================================
-  // TIME SLOTS GENERATION
-  // ================================================
-  
-  const timeSlots = [];
-  for (let hour = 7; hour <= 19; hour++) {
-    const hourStr = hour.toString().padStart(2, '0');
-    timeSlots.push(`${hourStr}:00`);
-    timeSlots.push(`${hourStr}:30`);
-  }
-
-  // ================================================
   // FETCH BUSY SLOTS WHEN DATE CHANGES
   // ================================================
-  
+
   useEffect(() => {
     if (!bookingData.date) {
       setBusySlots([]);
@@ -50,7 +49,7 @@ export default function BookTimePage() {
         const response = await fetch(
           `/api/booking?date=${bookingData.date}&timezone=${bookingData.timezone}`
         );
-        
+
         if (response.ok) {
           const data = await response.json();
           setBusySlots(data.busySlots || []);
@@ -68,18 +67,18 @@ export default function BookTimePage() {
   // ================================================
   // BOOKING HANDLER
   // ================================================
-  
+
   const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsBooking(true);
-    
+
     try {
       const response = await fetch('/api/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bookingData),
       });
-      
+
       if (response.ok) {
         setBookingStatus('success');
         setBookingData({ name: '', email: '', phone: '', date: '', time: '', timezone: 'America/Phoenix', message: '' });
@@ -93,14 +92,6 @@ export default function BookTimePage() {
     } finally {
       setIsBooking(false);
     }
-  };
-
-  // ================================================
-  // UTILITY FUNCTIONS
-  // ================================================
-  
-  const isTimeSlotBusy = (slot: string) => {
-    return busySlots.includes(slot);
   };
 
   // ================================================
@@ -122,7 +113,7 @@ export default function BookTimePage() {
 
       {/* Content */}
       <div className="relative z-10 pt-32 pb-20">
-        <div className="max-w-4xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-6">
           {/* Header */}
           <div className="text-center mb-12">
             <Calendar size={64} className="mx-auto mb-6 text-[#16E3FF]" />
@@ -136,127 +127,111 @@ export default function BookTimePage() {
 
           {/* Booking Form */}
           <div className="card-glass rounded-2xl p-8">
-            <form onSubmit={handleBooking} className="max-w-2xl mx-auto space-y-4">
-              <div className="grid md:grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  placeholder="Name *"
-                  required
-                  value={bookingData.name}
-                  onChange={(e) => setBookingData({...bookingData, name: e.target.value})}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:border-[#16E3FF] focus:outline-none"
+            <form onSubmit={handleBooking} className="space-y-8">
+              {/* Row 1: Calendar and Time Slots */}
+              <div className="grid lg:grid-cols-2 gap-6">
+                {/* Calendar Picker */}
+                <CalendarPicker
+                  selectedDate={bookingData.date}
+                  onDateSelect={(date) => {
+                    setBookingData({ ...bookingData, date, time: '' });
+                  }}
+                  minDate={new Date().toISOString().split('T')[0]}
                 />
-                
-                <input
-                  type="email"
-                  placeholder="Email *"
-                  required
-                  value={bookingData.email}
-                  onChange={(e) => setBookingData({...bookingData, email: e.target.value})}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:border-[#16E3FF] focus:outline-none"
+
+                {/* Time Slot Picker */}
+                <TimeSlotPicker
+                  selectedDate={bookingData.date}
+                  selectedTime={bookingData.time}
+                  onTimeSelect={(time) => setBookingData({ ...bookingData, time })}
+                  busySlots={busySlots}
+                  isLoading={isLoadingSlots}
                 />
               </div>
-              
-              <div className="grid md:grid-cols-2 gap-4">
-                <input
-                  type="date"
-                  required
-                  min={new Date().toISOString().split('T')[0]}
-                  value={bookingData.date}
-                  onChange={(e) => setBookingData({...bookingData, date: e.target.value})}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#16E3FF] focus:outline-none [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert"
+
+              {/* Row 2: Form Fields */}
+              <div className="max-w-3xl mx-auto space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    placeholder="Name *"
+                    required
+                    value={bookingData.name}
+                    onChange={(e) => setBookingData({...bookingData, name: e.target.value})}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:border-[#16E3FF] focus:outline-none"
+                  />
+
+                  <input
+                    type="email"
+                    placeholder="Email *"
+                    required
+                    value={bookingData.email}
+                    onChange={(e) => setBookingData({...bookingData, email: e.target.value})}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:border-[#16E3FF] focus:outline-none"
+                  />
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <input
+                    type="tel"
+                    placeholder="Phone (optional)"
+                    value={bookingData.phone}
+                    onChange={(e) => setBookingData({...bookingData, phone: e.target.value})}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:border-[#16E3FF] focus:outline-none"
+                  />
+
+                  <select
+                    value={bookingData.timezone}
+                    onChange={(e) => setBookingData({...bookingData, timezone: e.target.value})}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#16E3FF] focus:outline-none [&>option]:bg-[#1D1D1D] [&>option]:text-white"
+                  >
+                    <option value="America/New_York">Eastern Time (ET)</option>
+                    <option value="America/Chicago">Central Time (CT)</option>
+                    <option value="America/Denver">Mountain Time (MT)</option>
+                    <option value="America/Phoenix">Mountain Time - Arizona (MST)</option>
+                    <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                    <option value="America/Anchorage">Alaska Time (AKT)</option>
+                    <option value="Pacific/Honolulu">Hawaii Time (HST)</option>
+                    <option value="Europe/London">London (GMT/BST)</option>
+                    <option value="Europe/Paris">Central Europe (CET)</option>
+                    <option value="Asia/Tokyo">Tokyo (JST)</option>
+                    <option value="Australia/Sydney">Sydney (AEDT)</option>
+                  </select>
+                </div>
+
+                <textarea
+                  placeholder="What would you like to discuss? (optional)"
+                  rows={3}
+                  value={bookingData.message}
+                  onChange={(e) => setBookingData({...bookingData, message: e.target.value})}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:border-[#16E3FF] focus:outline-none resize-none"
                 />
-                
-                <select
-                  required
-                  value={bookingData.time}
-                  onChange={(e) => setBookingData({...bookingData, time: e.target.value})}
-                  disabled={isLoadingSlots}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#16E3FF] focus:outline-none [&>option]:bg-[#1D1D1D] [&>option]:text-white disabled:opacity-50"
+
+                <button
+                  type="submit"
+                  disabled={isBooking || !bookingData.date || !bookingData.time}
+                  className="btn-primary w-full py-4 rounded-full text-white font-semibold disabled:opacity-50"
                 >
-                  <option value="">
-                    {isLoadingSlots ? 'Loading available times...' : 'Select Time *'}
-                  </option>
-                  {timeSlots.map((slot) => {
-                    const [hour, minute] = slot.split(':');
-                    const hourNum = parseInt(hour);
-                    const period = hourNum >= 12 ? 'PM' : 'AM';
-                    const displayHour = hourNum === 0 ? 12 : hourNum > 12 ? hourNum - 12 : hourNum;
-                    const isBusy = isTimeSlotBusy(slot);
-                    
-                    return (
-                      <option 
-                        key={slot} 
-                        value={slot}
-                        disabled={isBusy}
-                      >
-                        {displayHour}:{minute} {period} {isBusy ? '(Unavailable)' : ''}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
-              
-              <div>
-                <select
-                  value={bookingData.timezone}
-                  onChange={(e) => setBookingData({...bookingData, timezone: e.target.value})}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#16E3FF] focus:outline-none [&>option]:bg-[#1D1D1D] [&>option]:text-white"
-                >
-                  <option value="America/New_York">Eastern Time (ET)</option>
-                  <option value="America/Chicago">Central Time (CT)</option>
-                  <option value="America/Denver">Mountain Time (MT)</option>
-                  <option value="America/Phoenix">Mountain Time - Arizona (MST)</option>
-                  <option value="America/Los_Angeles">Pacific Time (PT)</option>
-                  <option value="America/Anchorage">Alaska Time (AKT)</option>
-                  <option value="Pacific/Honolulu">Hawaii Time (HST)</option>
-                  <option value="Europe/London">London (GMT/BST)</option>
-                  <option value="Europe/Paris">Central Europe (CET)</option>
-                  <option value="Asia/Tokyo">Tokyo (JST)</option>
-                  <option value="Australia/Sydney">Sydney (AEDT)</option>
-                </select>
-              </div>
-              
-              <input
-                type="tel"
-                placeholder="Phone (optional)"
-                value={bookingData.phone}
-                onChange={(e) => setBookingData({...bookingData, phone: e.target.value})}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:border-[#16E3FF] focus:outline-none"
-              />
-              
-              <textarea
-                placeholder="What would you like to discuss? (optional)"
-                rows={3}
-                value={bookingData.message}
-                onChange={(e) => setBookingData({...bookingData, message: e.target.value})}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:border-[#16E3FF] focus:outline-none resize-none"
-              />
-              
-              <button
-                type="submit"
-                disabled={isBooking}
-                className="btn-primary w-full py-4 rounded-full text-white font-semibold disabled:opacity-50"
-              >
-                {isBooking ? 'Scheduling...' : (
-                  <>
-                    <Calendar className="inline mr-2" size={20} />
-                    Schedule Meeting
-                  </>
+                  {isBooking ? 'Scheduling...' : (
+                    <>
+                      <Calendar className="inline mr-2" size={20} />
+                      Schedule Meeting
+                    </>
+                  )}
+                </button>
+
+                {bookingStatus === 'success' && (
+                  <p className="text-[#16E3FF] text-center">
+                    Meeting scheduled! Check your email for the Google Meet link.
+                  </p>
                 )}
-              </button>
-              
-              {bookingStatus === 'success' && (
-                <p className="text-[#16E3FF] text-center">
-                  Meeting scheduled! Check your email for the Google Meet link.
-                </p>
-              )}
-              
-              {bookingStatus === 'error' && (
-                <p className="text-red-400 text-center">
-                  Failed to schedule meeting. Please try again.
-                </p>
-              )}
+
+                {bookingStatus === 'error' && (
+                  <p className="text-red-400 text-center">
+                    Failed to schedule meeting. Please try again.
+                  </p>
+                )}
+              </div>
             </form>
           </div>
         </div>
