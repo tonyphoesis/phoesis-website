@@ -158,12 +158,15 @@ export default function BookTimePage() {
                   onTimeSelect={(time) => setBookingData({ ...bookingData, time })}
                   busySlots={busySlots}
                   isLoading={isLoadingSlots}
+                  timezone={bookingData.timezone}
+                  onTimezoneChange={(timezone) => setBookingData({ ...bookingData, timezone })}
                 />
               </div>
 
               {/* Row 2: Form Fields */}
               <div className="max-w-3xl mx-auto space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
+                {/* Row 1: Name, Email, Phone (3 columns) */}
+                <div className="grid grid-cols-3 gap-4">
                   <input
                     type="text"
                     placeholder="Name *"
@@ -181,9 +184,7 @@ export default function BookTimePage() {
                     onChange={(e) => setBookingData({...bookingData, email: e.target.value})}
                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:border-[#16E3FF] focus:outline-none"
                   />
-                </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
                   <input
                     type="tel"
                     placeholder="Phone (optional)"
@@ -191,26 +192,9 @@ export default function BookTimePage() {
                     onChange={(e) => setBookingData({...bookingData, phone: e.target.value})}
                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:border-[#16E3FF] focus:outline-none"
                   />
-
-                  <select
-                    value={bookingData.timezone}
-                    onChange={(e) => setBookingData({...bookingData, timezone: e.target.value})}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-[#16E3FF] focus:outline-none [&>option]:bg-[#1D1D1D] [&>option]:text-white"
-                  >
-                    <option value="America/New_York">Eastern Time (ET)</option>
-                    <option value="America/Chicago">Central Time (CT)</option>
-                    <option value="America/Denver">Mountain Time (MT)</option>
-                    <option value="America/Phoenix">Mountain Time - Arizona (MST)</option>
-                    <option value="America/Los_Angeles">Pacific Time (PT)</option>
-                    <option value="America/Anchorage">Alaska Time (AKT)</option>
-                    <option value="Pacific/Honolulu">Hawaii Time (HST)</option>
-                    <option value="Europe/London">London (GMT/BST)</option>
-                    <option value="Europe/Paris">Central Europe (CET)</option>
-                    <option value="Asia/Tokyo">Tokyo (JST)</option>
-                    <option value="Australia/Sydney">Sydney (AEDT)</option>
-                  </select>
                 </div>
 
+                {/* Row 2: Message (full width) */}
                 <textarea
                   placeholder="What would you like to discuss? (optional)"
                   rows={3}
@@ -218,6 +202,8 @@ export default function BookTimePage() {
                   onChange={(e) => setBookingData({...bookingData, message: e.target.value})}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:border-[#16E3FF] focus:outline-none resize-none"
                 />
+
+                {/* Row 3: Submit Button */}
 
                 <button
                   type="submit"

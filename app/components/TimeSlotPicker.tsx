@@ -17,6 +17,8 @@ interface TimeSlotPickerProps {
   onTimeSelect: (time: string) => void;
   busySlots: string[]; // Array of busy time slots in HH:MM format
   isLoading: boolean;
+  timezone: string;
+  onTimezoneChange: (timezone: string) => void;
 }
 
 export default function TimeSlotPicker({
@@ -25,6 +27,8 @@ export default function TimeSlotPicker({
   onTimeSelect,
   busySlots,
   isLoading,
+  timezone,
+  onTimezoneChange,
 }: TimeSlotPickerProps) {
   // Generate time slots (7:00 AM to 7:30 PM)
   const generateTimeSlots = () => {
@@ -158,12 +162,38 @@ export default function TimeSlotPicker({
       <div className="mb-6">
         {selectedDate ? (
           <>
-            <h3 className="text-white font-semibold text-lg mb-2">
-              Available Times
-            </h3>
-            <p className="text-[#16E3FF] text-sm">
-              {getFormattedDate(selectedDate)}
-            </p>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-white font-semibold text-lg">
+                Available Times
+              </h3>
+              <p className="text-[#16E3FF] text-sm">
+                {getFormattedDate(selectedDate)}
+              </p>
+            </div>
+
+            {/* Timezone Selector */}
+            <div className="flex items-center gap-3 mb-4">
+              <label className="text-[#16E3FF] text-sm font-medium whitespace-nowrap">
+                Select Your Time Zone
+              </label>
+              <select
+                value={timezone}
+                onChange={(e) => onTimezoneChange(e.target.value)}
+                className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#16E3FF] focus:outline-none [&>option]:bg-[#1D1D1D] [&>option]:text-white"
+              >
+                <option value="America/New_York">Eastern Time (ET)</option>
+                <option value="America/Chicago">Central Time (CT)</option>
+                <option value="America/Denver">Mountain Time (MT)</option>
+                <option value="America/Phoenix">Mountain Time - Arizona (MST)</option>
+                <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                <option value="America/Anchorage">Alaska Time (AKT)</option>
+                <option value="Pacific/Honolulu">Hawaii Time (HST)</option>
+                <option value="Europe/London">London (GMT/BST)</option>
+                <option value="Europe/Paris">Central Europe (CET)</option>
+                <option value="Asia/Tokyo">Tokyo (JST)</option>
+                <option value="Australia/Sydney">Sydney (AEDT)</option>
+              </select>
+            </div>
           </>
         ) : (
           <div className="text-center py-8">
